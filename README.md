@@ -25,7 +25,7 @@ Se define una malla ``msh``para representar un círculo con tres ``elset`` a sab
 * ``msh.elsets['upper']``: Lista con los índices de los elementos que conforman la mitad superior del círculo.
 * ``msh.elsets['bottom']``: Lista con los índices de los elementos que conforman la mitad inferior del círculo.
 
-La malla esta ordenada, es decir, la secuencia de los elementos en ``msh.elements`` forma un lazo cerrado en tanto que el segundo vértice de un elemento $i$ coincide siempre con el primer vértice de un elemento $i+1$, tal como se ve en la Figura 1. Las figuras 2 y 3 muestran los elementos de la mitad superior e inferior, respectivamente.
+La malla esta ordenada, es decir, la secuencia de los elementos en ``msh.elements`` forma un **lazo cerrado** en tanto que el segundo vértice de un elemento $i$ coincide siempre con el primer vértice de un elemento $i+1$, tal como se ve en la Figura 1. Las figuras 2 y 3 muestran los elementos de la mitad superior e inferior, respectivamente.
 
 ![Malla ordenada 1: Todos los elementos.](./doc/sorted01.svg)
 
@@ -64,5 +64,10 @@ El fichero [prueba01.py](./prueba01.py) contiene la implementación de la clase 
 Se deberá escribir una functión ``sort`` para la clase ``Mesh`` que organice nuevamente los elementos desordenados al invocar la función ``shuffle``. Dicha función deberá cumplir con los siguientes requisitos:
 
 1. La función no tomará ningún argumento y solo podrá usar los miembros de la clase ``Mesh`` definidos en la sección 1. No se podrá usar ninguna información calculada dentro de la función ``shuffle``.
-2. La función deberá ordenar la lista ``msh.elements`` de forma tal que los elementos formen un lazo cerrado. La posición del primer elemento y la orientación del mismo es arbitraria.
-3. La función deberá garantizar el mapeo de cada uno de los ``elset`` en ``msh.elsets``, es decir que se deberá poder dibujar nuevamente los elementos superiores e inferiores de la circunferencia.
+2. La función deberá ordenar la lista ``msh.elements`` de forma tal que los elementos formen un **lazo cerrado** tal como se definió en la sección 2.1. La posición del primer elemento y la orientación del mismo es arbitraria.
+3. La función deberá garantizar el mapeo de cada uno de los ``elset`` en ``msh.elsets``, es decir que se deberá poder dibujar nuevamente los elementos superiores e inferiores de la circunferencia. 
+
+### 2.3 Discusión del problema
+
+El candidato deberá enviar la solución al correo electrónico de contacto antes de la discusión.
+Durante la discusión el candidato deberá explicar la solución dada al problema y para ello podrá usar cualquier ayuda audiovisual, entre otras: pantallazos, diapositivas y fotos de notas hechas a mano.
