@@ -7,8 +7,6 @@ import copy as copy
 import random
 import pickle
 
-from cqfuns3.utils import sort_closed_loop
-
 class Mesh():
 
     def __init__(self, vertices, elements, nsets={}, elsets={}):
@@ -211,34 +209,36 @@ elset_all = msh.elsets['all']
 elset_upper = msh.elsets['upper']
 elset_bottom = msh.elsets['bottom']
 
-fig,_ = draw(msh, elset=elset_all, annotate=True)
-fig.savefig('sorted01.svg')
+fig,_ = draw(msh, elset=elset_all, annotate=True, title='Elementos ordenados')
+# fig.savefig('sorted01.svg')
 
-fig,_ = draw(msh, elset=elset_upper)
-fig.savefig('sorted02.svg')
+fig,_ = draw(msh, elset=elset_upper, title='Elementos ordenados: upper')
+# fig.savefig('sorted02.svg')
 
-fig,_ = draw(msh, elset=elset_bottom)
-fig.savefig('sorted03.svg')
+fig,_ = draw(msh, elset=elset_bottom, title='Elementos ordenados: bottom')
+# fig.savefig('sorted03.svg')
 
 msh.shuffle()
 elset_all = msh.elsets['all']
 elset_upper = msh.elsets['upper']
 elset_bottom = msh.elsets['bottom']
 
-fig,_ = draw(msh, elset=elset_all, annotate=True)
-fig.savefig('shuffled01.svg')
+fig,_ = draw(msh, elset=elset_all, annotate=True, title='Elementos desordenados')
+# fig.savefig('shuffled01.svg')
 
-fig,_ = draw(msh, elset=elset_upper)
-fig.savefig('shuffled02.svg')
+fig,_ = draw(msh, elset=elset_upper, title='Elementos desordenados: upper')
+# fig.savefig('shuffled02.svg')
 
-fig,_ = draw(msh, elset=elset_bottom)
-fig.savefig('shuffled03.svg')
+fig,_ = draw(msh, elset=elset_bottom, title='Elementos deordenados: bottom')
+# fig.savefig('shuffled03.svg')
 
-
+# ###################################################################################### #
+# Test solution
 # msh.sort()
 # elset_all = msh.elsets['all']
 # elset_upper = msh.elsets['upper']
 # elset_bottom = msh.elsets['bottom']
-# draw(msh, elset=elset_all, annotate=True)
-# draw(msh, elset=elset_upper)
-# draw(msh, elset=elset_bottom)
+# draw(msh, elset=elset_all, annotate=True, title='Elementos reordenados')
+# draw(msh, elset=elset_upper, title='Elementos reordenados: upper')
+# draw(msh, elset=elset_bottom, title='Elementos reordenados: bottom')
+# ###################################################################################### #
