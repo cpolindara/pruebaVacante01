@@ -80,9 +80,42 @@ class Mesh():
         for ii in indices:
             self.__elements[ii].reverse()
 
+    def split(self):
+        # n = int(self.__nelements / 2)
+        # all_elems = [ii for ii in range(self.__nelements)]
+        # elems_to_remove = [all_elems[-1], all_elems[-n-1]]
+
+        elems_to_remove = []
+        indices = [(0,1), (self.__nvertices//2, self.__nvertices//2 + 1)]
+        for ii,jj in indices:
+            for el_indx, el in enumerate(self.__elements):
+                if ii in el and jj in el:
+                    elems_to_remove.append(el_indx)
+        elems_to_remove.sort()
+
+        for ii in elems_to_remove[::-1]:
+            self.__elements.pop(ii)
+
+        old2new = {}
+        nelements = 0
+        for ii in range(self.__nelements):
+            if ii in elems_to_remove:
+                old2new[ii] = None
+            else:
+                old2new[ii] = nelements
+                nelements += 1
+
+        for key,elset in self.__elsets.items():
+            elset = [old2new[ii] for ii in elset]
+            elset = [ii for ii in elset if ii is not None]
+            self.__elsets[key] = elset
+
+        self.__nelements -= 2
+        self.__elsets['all'] = [ii for ii in range(self.__nelements)]   # special hardcoded set!!!
+
     def sort(self):
         # ###################################################################################### #
-        # solution
+        # # solution
 
         # ###################################################################################### #
         
@@ -149,7 +182,7 @@ def draw(my_mesh:Mesh, elset=[], colormap ='cividis', title='', annotate=False):
                 color = cmap(norm(indx))  # Get color from color map
                 # ax.plot(x, y, color=color, linewidth=4.0)
                 ax.quiver(v_1[0], v_1[1], dv[0], dv[1], zorder=2,
-                          angles='xy', scale_units='xy', scale=1, width=0.0075, color=color, label='%d: (%d, %d)'%(indx,el_1,el_2))
+                          angles='xy', scale_units='xy', scale=1, width=0.0075, color=color, label='%2d: (%d, %d)'%(indx,el_1,el_2))
 
     x_left, x_right, y_bottom, y_upper = set_axes_equal(ax, my_mesh)
     ax.set_xlim()
@@ -160,7 +193,7 @@ def draw(my_mesh:Mesh, elset=[], colormap ='cividis', title='', annotate=False):
     if annotate:
         for ii,v in enumerate(my_mesh.vertices):
             ax.plot(v[0], v[1], 'ok', markersize=3)
-            ax.annotate('%d'%ii, xy=(v[0], v[1]))#,
+            ax.annotate('%d'%ii, xy=(v[0], v[1]))
 
         ax.legend(loc='upper left', bbox_to_anchor=(1., 1.))
         # ax.legend()
@@ -195,8 +228,10 @@ def create_circle(center=(0., 0.), radius=1.0, nelements=24):
     nsets = {'all': [ii for ii in range(nelements)]}
     elsets = {
         'all': [ii for ii in range(nelements)],
-        'upper': [ii for ii in range(nelements//2)],
-        'bottom': [ii for ii in range(nelements // 2, nelements)],
+        'upper-right': [ii for ii in range(nelements//4)],
+        'upper-left': [ii for ii in range(nelements//4, nelements//2)],
+        'bottom-left': [ii for ii in range(nelements//2, 3*nelements//4)],
+        'bottom-right': [ii for ii in range(3*nelements//4, nelements)],
     }
 
     return Mesh(vertices, elements, nsets, elsets)
@@ -204,41 +239,73 @@ def create_circle(center=(0., 0.), radius=1.0, nelements=24):
 
 # #################################################################################################################### #
 
-msh = create_circle(nelements=12)
-elset_all = msh.elsets['all']
-elset_upper = msh.elsets['upper']
-elset_bottom = msh.elsets['bottom']
+def problema01():
+    msh = create_circle(nelements=12)
+    ii = 1
+    for key,elset in msh.elsets.items():
+        annotate = False
+        if key == 'all':
+            annotate = True
+        # fig,_ = draw(msh, elset=elset, title='Elementos ordenados: %s'%key, annotate=annotate)
+        # fig.savefig('sorted%02d.svg'%ii)
+        ii += 1
 
-fig,_ = draw(msh, elset=elset_all, annotate=True, title='Elementos ordenados')
-# fig.savefig('sorted01.svg')
+    msh.shuffle()
+    ii = 1
+    for key,elset in msh.elsets.items():
+        annotate = False
+        if key == 'all':
+            annotate = True
+        # fig,_ = draw(msh, elset=elset, title='Elementos desordenados: %s'%key, annotate=annotate)
+        # fig.savefig('shuffled%02d.svg'%ii)
+        ii += 1
 
-fig,_ = draw(msh, elset=elset_upper, title='Elementos ordenados: upper')
-# fig.savefig('sorted02.svg')
 
-fig,_ = draw(msh, elset=elset_bottom, title='Elementos ordenados: bottom')
-# fig.savefig('sorted03.svg')
+    # ###################################################################################### #
+    # Test solution
+    # msh.sort()
+    # for key,elset in msh.elsets.items():
+    #     annotate = False
+    #     if key == 'all':
+    #         annotate = True
+    #     draw(msh, elset=elset, title='Elementos reordenados: %s'%key, annotate=annotate)
+    # ###################################################################################### #
 
-msh.shuffle()
-elset_all = msh.elsets['all']
-elset_upper = msh.elsets['upper']
-elset_bottom = msh.elsets['bottom']
+def problema02():
+    msh = create_circle(nelements=12)
+    ii = 1
+    for key,elset in msh.elsets.items():
+        annotate = False
+        if key == 'all':
+            annotate = True
+        # fig,_ = draw(msh, elset=elset, title='Elementos ordenados: %s'%key, annotate=annotate)
+        # fig.savefig('sorted%02d.svg'%ii)
+        ii += 1
 
-fig,_ = draw(msh, elset=elset_all, annotate=True, title='Elementos desordenados')
-# fig.savefig('shuffled01.svg')
+    msh.shuffle()
+    msh.split()
+    ii = 1
+    for key,elset in msh.elsets.items():
+        annotate = False
+        if key == 'all':
+            annotate = True
+        fig,_ = draw(msh, elset=elset, title='Elementos desordenados: %s'%key, annotate=annotate)
+        # fig.savefig('split%02d.svg'%ii)
+        ii += 1
 
-fig,_ = draw(msh, elset=elset_upper, title='Elementos desordenados: upper')
-# fig.savefig('shuffled02.svg')
 
-fig,_ = draw(msh, elset=elset_bottom, title='Elementos deordenados: bottom')
-# fig.savefig('shuffled03.svg')
+    # ###################################################################################### #
+    # Test solution
+    # msh.sort()
+    # for key,elset in msh.elsets.items():
+    #     annotate = False
+    #     if key == 'all':
+    #         annotate = True
+    #     draw(msh, elset=elset, title='Elementos reordenados: %s'%key, annotate=annotate)
+    # ###################################################################################### #
 
-# ###################################################################################### #
-# Test solution
-# msh.sort()
-# elset_all = msh.elsets['all']
-# elset_upper = msh.elsets['upper']
-# elset_bottom = msh.elsets['bottom']
-# draw(msh, elset=elset_all, annotate=True, title='Elementos reordenados')
-# draw(msh, elset=elset_upper, title='Elementos reordenados: upper')
-# draw(msh, elset=elset_bottom, title='Elementos reordenados: bottom')
-# ###################################################################################### #
+
+# problema01()
+problema02()
+
+print('\nAll good!')

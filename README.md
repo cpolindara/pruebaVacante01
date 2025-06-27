@@ -20,12 +20,15 @@ Se tiene una geometría 2-dimensional, también llamada ``malla``, hecha de punt
 
 ### 2.1 Introducción
 
-Se define una malla ``msh``para representar un círculo con tres ``elset`` a saber:
+Se define una malla ``msh``para representar un círculo con cinco ``elset`` a saber:
 * ``msh.elsets['all']``: Lista continua de elementos desde 1 hasta $n_{el}$.
-* ``msh.elsets['upper']``: Lista con los índices de los elementos que conforman la mitad superior del círculo.
-* ``msh.elsets['bottom']``: Lista con los índices de los elementos que conforman la mitad inferior del círculo.
+* ``msh.elsets['upper-right']``: Lista con los índices de los elementos que conforman la mitad superior derecha del círculo.
+* ``msh.elsets['upper-left']``: Lista con los índices de los elementos que conforman la mitad superior izquierda del círculo.
+* ``msh.elsets['bottom-right']``: Lista con los índices de los elementos que conforman la mitad inferior derecha del círculo.
+* ``msh.elsets['bottom-left']``: Lista con los índices de los elementos que conforman la mitad inferior izquierda del círculo.
 
-La malla esta ordenada, es decir, la secuencia de los elementos en ``msh.elements`` forma un **lazo cerrado** en tanto que el segundo vértice de un elemento $i$ coincide siempre con el primer vértice de un elemento $i+1$, tal como se ve en la Figura 1. Las figuras 2 y 3 muestran los elementos de la mitad superior e inferior, respectivamente.
+La malla esta ordenada, es decir, la secuencia de los elementos en ``msh.elements`` forma un **lazo cerrado** en tanto que el segundo vértice de un elemento $i$ coincide siempre con el primer vértice de un elemento $i+1$, tal como se ve en la Figura 1.
+Las figuras 2-5 muestran los elset definidos para esta malla.
 
 ![Malla ordenada 1: Todos los elementos.](./doc/sorted01.svg)
 
@@ -33,13 +36,25 @@ La malla esta ordenada, es decir, la secuencia de los elementos en ``msh.element
 
 ![Malla ordenada 2: Elementos superiores.](./doc/sorted02.svg)
 
-*Figura 2. Malla ordenada: Se presentan los elementos msh.elsets['upper'].*
+*Figura 2. Malla ordenada: Se presentan los elementos msh.elsets['upper-right'].*
 
-![Malla ordenada 3: Elementos inferiores.](./doc/sorted03.svg)
+![Malla ordenada 3: Elementos superiores.](./doc/sorted03.svg)
 
-*Figura 3. Malla ordenada: Se presentan los elementos msh.elsets['bottom'].*
+*Figura 3. Malla ordenada: Se presentan los elementos msh.elsets['upper-left'].*
 
-Se define así mismo una función ``shuffle`` en la clase ``Mesh``. Esta función sirve para desordenar los elementos de una malla cambiando el orden de la lista ``elements`` así como el sentido de algunos elementos de forma aleatoria. Es importante notar las siguientes dos cosas que no cambian al invocar la función ``shuffle`` en la malla ``msh``. Las figuras 4, 5 y 6 muestran la conectividad de los elementos, los elementos de la mitad superior y los elementos de la mitad inferior, respectivamente.
+![Malla ordenada 4: Elementos inferiores.](./doc/sorted04.svg)
+
+*Figura 4. Malla ordenada: Se presentan los elementos msh.elsets['bottom-right'].*
+
+![Malla ordenada 5: Elementos inferiores.](./doc/sorted05.svg)
+
+*Figura 5. Malla ordenada: Se presentan los elementos msh.elsets['bottom-left'].*
+
+#### 2.1.1 Desordenar elementos
+Se define una función ``shuffle`` en la clase ``Mesh``. Esta función sirve para desordenar los elementos de una malla cambiando el orden de la lista ``elements`` así como el sentido de algunos elementos de forma aleatoria.
+Las figuras 6 muestra la conectividad de los elementos desordenados.
+Las figuras 7-10 muestran los elset definidos para esta malla.
+Es importante notar las siguientes dos cosas que no cambian al invocar la función ``shuffle`` en la malla ``msh``.
 
 1. El listado de elementos en ``msh.elsets['all']``, pues será siempre una lista continua desde 1 hasta $n_{el}$.
 2. El orden de los vértices.
@@ -47,15 +62,50 @@ Se define así mismo una función ``shuffle`` en la clase ``Mesh``. Esta funció
 
 ![Malla desordenada 1: Todos los elementos.](./doc/shuffled01.svg)
 
-*Figura 4. Malla desordenada: Se presentan los elementos msh.elsets['all'] así como su conectividad.*
+*Figura 6. Malla desordenada: Se presentan los elementos msh.elsets['all'] así como su conectividad.*
 
-![Malla desordenada 2: Elementos superiores.](./doc/shuffled02.svg)
+![Malla dsordenada 2: Elementos superiores.](./doc/shuffled02.svg)
 
-*Figura 5. Malla desordenada: Se presentan los elementos msh.elsets['upper'].*
+*Figura 7. Malla desordenada: Se presentan los elementos msh.elsets['upper-right'].*
 
-![Malla desordenada 3: Elementos inferiores.](./doc/shuffled03.svg)
+![Malla desordenada 3: Elementos superiores.](./doc/shuffled03.svg)
 
-*Figura 6. Malla desordenada: Se presentan los elementos msh.elsets['bottom'].*
+*Figura 8. Malla desordenada: Se presentan los elementos msh.elsets['upper-left'].*
+
+![Malla desordenada 4: Elementos inferiores.](./doc/shuffled04.svg)
+
+*Figura 9. Malla desordenada: Se presentan los elementos msh.elsets['bottom-right'].*
+
+![Malla desordenada 5: Elementos inferiores.](./doc/shuffled05.svg)
+
+*Figura 10. Malla desordenada: Se presentan los elementos msh.elsets['bottom-left'].*
+
+#### 2.1.2 Dividir la conectividad de los elementos
+
+Se define la función split para dividir la conectividad de la malla. Esta función elimina dos elementos de la malla. 
+Se desordenan los elementos de la malla y luego se divide su conectividad.
+La malla resultante se presentan en las figuras x-y.
+
+
+![Malla dividida 1: Todos los elementos.](./doc/split01.svg)
+
+*Figura 11. Malla dividida: Se presentan los elementos msh.elsets['all'] así como su conectividad.*
+
+![Malla dsordenada 2: Elementos superiores.](./doc/split02.svg)
+
+*Figura 12. Malla dividida: Se presentan los elementos msh.elsets['upper-right'].*
+
+![Malla dividida 3: Elementos superiores.](./doc/split03.svg)
+
+*Figura 13. Malla dividida: Se presentan los elementos msh.elsets['upper-left'].*
+
+![Malla dividida 4: Elementos inferiores.](./doc/split04.svg)
+
+*Figura 14. Malla dividida: Se presentan los elementos msh.elsets['bottom-right'].*
+
+![Malla dividida 5: Elementos inferiores.](./doc/split05.svg)
+
+*Figura 15. Malla dividida: Se presentan los elementos msh.elsets['bottom-left'].*
 
 ### 2.2 Planteamiento del problema
 
