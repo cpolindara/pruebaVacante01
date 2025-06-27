@@ -1,3 +1,4 @@
+from typing import List, Dict, Any
 import numpy as np
 from numpy.linalg import norm
 import matplotlib.pyplot as plt
@@ -120,6 +121,9 @@ class Mesh():
         # ###################################################################################### #
         
         self.__elsets['all'] = [ii for ii in range(self.__nelements)]   # special hardcoded set!!!
+
+    def get_connected_and_sorted(self):
+        pass
 
     def save(self, filename='pickle.pkl'):
         save_object_to_pickle((self.__vertices, self.__elements, self.__elsets), filename)
@@ -296,12 +300,13 @@ def problema02():
 
     # ###################################################################################### #
     # Test solution
-    # msh.sort()
-    # for key,elset in msh.elsets.items():
-    #     annotate = False
-    #     if key == 'all':
-    #         annotate = True
-    #     draw(msh, elset=elset, title='Elementos reordenados: %s'%key, annotate=annotate)
+    connected_meshes = msh.get_connected_and_sorted()
+    for ii, msh_connected in enumerate(connected_meshes):
+        for key,elset in msh_connected.elsets.items():
+            annotate = False
+            if key == 'all':
+                annotate = True
+            draw(msh, elset=elset, title='Malla %d, elset %s'%(ii,key), annotate=annotate)
     # ###################################################################################### #
 
 
