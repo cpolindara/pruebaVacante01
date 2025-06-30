@@ -13,7 +13,7 @@ Se tiene una geometría 2-dimensional, también llamada ``malla``, hecha de punt
 
 * ``vertices``: Es un arreglo bidimensional (Numpy.ndarray) de tamaño $n_v$ x 2, donde $n_v$ es el número de vertices o puntos.
 * ``elements``: Es una lista anidada de tamaño $n_{el}$, donde $n_{el}$ es el número de líneas ó elementos, así cada objeto en esta lista será un elemento definido por los indices de dos vértices.
-* ``elsets``: Es un diccionario que contiene subsets de los elementos. La llave es una cadena de texto y el valor será una lista con los índices de los elementos. A cada una de estas listas se le llama ``elset``.
+* ``elsets``: Es un diccionario que contiene subsets de los elementos. La llave es una cadena de texto y el valor será una lista con los índices de los elementos que pertenecen al subset. A cada una de estas listas se le llama ``elset``.
 
 
 ## 2. Problema
@@ -28,7 +28,7 @@ Se define una malla ``msh``para representar un círculo con cinco ``elset`` a sa
 * ``msh.elsets['bottom-left']``: Lista con los índices de los elementos que conforman la mitad inferior izquierda del círculo.
 
 La malla esta ordenada, es decir, la secuencia de los elementos en ``msh.elements`` forma un **lazo cerrado** en tanto que el segundo vértice de un elemento $i$ coincide siempre con el primer vértice de un elemento $i+1$, tal como se ve en la Figura 1.
-Las figuras 2-5 muestran los elset definidos para esta malla.
+Las figuras 2-5 muestran los ``elset`` definidos para esta malla.
 
 ![Malla ordenada 1: Todos los elementos.](./doc/sorted01.svg)
 
@@ -53,7 +53,7 @@ Las figuras 2-5 muestran los elset definidos para esta malla.
 #### 2.1.1 Desordenar elementos
 Se define una función ``shuffle`` en la clase ``Mesh``. Esta función sirve para desordenar los elementos de una malla cambiando el orden de la lista ``elements`` así como el sentido de algunos elementos de forma aleatoria.
 Las figuras 6 muestra la conectividad de los elementos desordenados.
-Las figuras 7-10 muestran los elset definidos para esta malla.
+Las figuras 7-10 muestran los ``elset`` de la malla.
 Es importante notar las siguientes dos cosas que no cambian al invocar la función ``shuffle`` en la malla ``msh``.
 
 1. El listado de elementos en ``msh.elsets['all']``, pues será siempre una lista continua desde 1 hasta $n_{el}$.
@@ -82,9 +82,8 @@ Es importante notar las siguientes dos cosas que no cambian al invocar la funci�
 
 #### 2.1.2 Dividir la conectividad de los elementos
 
-Se define la función split para dividir la conectividad de la malla. Esta función elimina dos elementos de la malla. 
-Se desordenan los elementos de la malla y luego se divide su conectividad.
-La malla resultante se presentan en las figuras x-y.
+Se define la función ``split`` para la clase ``Mesh``. Esta función se usa para dividir la conectividad de la malla. Al invocarse, la función ``split`` elimina dos elementos de la malla. 
+La Figura 11 muestra la conectividad de la malla después de haber invocado las funciones ``shuffle`` y ``split`` en forma consecutiva en la malla ``msh``. Las figuras 12-15 muestran los ``elset`` en la malla.
 
 
 ![Malla dividida 1: Todos los elementos.](./doc/split01.svg)
@@ -109,13 +108,35 @@ La malla resultante se presentan en las figuras x-y.
 
 ### 2.2 Planteamiento del problema
 
-El fichero [prueba01.py](./prueba01.py) contiene la implementación de la clase ``Mesh`` así como de la función ``draw`` para dibujar mallas. Allí se crea el objeto ``msh`` que es una instancia de la clase ``Mesh`` y representa una cirfuncerencia tal como se explica en la sección 2.1. Se invoca la función ``shuffle`` en este objeto de forma tal que se desordena los elementos.
+El fichero [prueba01.py](./prueba01.py) contiene la implementación de la clase ``Mesh`` así como de la función ``draw`` para dibujar mallas.
+Se plantean dos ejercicios a saber definidos en las funciones ``problema01`` y ``problema02``.
+
+
+#### 2.2.1 Problema 1
+
+El problema 1 se define en la función ``problema01``. 
+Allí se crea el objeto ``msh`` que es una instancia de la clase ``Mesh`` y representa una cirfuncerencia tal como se explica en la sección 2.1.
+Se invoca la función ``shuffle`` en este objeto de forma tal que se desordena los elementos,
+como queda ilustrado en las figuras 6-10.
 
 Se deberá escribir una functión ``sort`` para la clase ``Mesh`` que organice nuevamente los elementos desordenados al invocar la función ``shuffle``. Dicha función deberá cumplir con los siguientes requisitos:
 
 1. La función no tomará ningún argumento y solo podrá usar los miembros de la clase ``Mesh`` definidos en la sección 1. No se podrá usar ninguna información calculada dentro de la función ``shuffle``.
 2. La función deberá ordenar la lista ``msh.elements`` de forma tal que los elementos formen un **lazo cerrado** tal como se definió en la sección 2.1. La posición del primer elemento y la orientación del mismo es arbitraria.
-3. La función deberá garantizar el mapeo de cada uno de los ``elset`` en ``msh.elsets``, es decir que se deberá poder dibujar nuevamente los elementos superiores e inferiores de la circunferencia. 
+3. La función deberá garantizar el mapeo de cada uno de los ``elset`` en ``msh.elsets``, es decir que se deberá poder dibujar nuevamente cada uno de los ``elset``.
+
+
+#### 2.2.2 Problema 2
+
+El problema 2 se define en la función ``problema02``. 
+Allí se crea el objeto ``msh`` que es una instancia de la clase ``Mesh`` y representa una cirfuncerencia tal como se explica en la sección 2.1.
+Se invocan lad funciones ``shuffle`` y ``split`` en este objeto de forma tal que se desordena los elementos y se divide la malla, como queda ilustrado en las figuras 11-15.
+
+Se deberá escribir una función ``get_connected_and_sorted`` para la clase ``Mesh`` que agrupe los elementos conectados en mallas diferentes y las devuelva al usuario. Esta función deberá cumplir con los siguientes requisitos:
+
+1. La función devolverá al usuario una lista de objetos ``Mesh``.
+2. Los elementos de cada una de las mallas en la lista deberán ser ordenados.
+3. La función deberá garantizar el mapeo de cada uno de los ``elset`` en ``msh.elsets``, es decir que se deberá poder dibujar nuevamente cada uno de los ``elset``.
 
 ### 2.3 Discusión del problema
 
